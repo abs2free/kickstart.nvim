@@ -1,0 +1,20 @@
+{
+  "if error": {
+    "prefix": "iferr",
+    "body": [
+      "if err != nil {",
+      "\treturn $1err",
+      "}"
+    ],
+    "description": "If error handling is a self define snipps" 
+  },
+  "function": {
+    "prefix": "func",
+    "body": [
+      "func ${1:name}(${2:params}) ${3:returnType} {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Function declaration"
+  }
+}
