@@ -875,6 +875,18 @@ require('lazy').setup({
         default = { 'lsp', 'path', 'snippets', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          omni = {
+            module = 'blink.cmp.sources.complete_func',
+            enabled = function()
+              return vim.bo.omnifunc ~= 'v:lua.vim.lsp.omnifunc'
+            end,
+            ---@type blink.cmp.CompleteFuncOpts
+            opts = {
+              complete_func = function()
+                return vim.bo.omnifunc
+              end,
+            },
+          },
         },
       },
 
