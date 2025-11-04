@@ -27,4 +27,5 @@ return {
       -- vim.cmd.colorscheme('sonokai')
     end,
   },
+  { 'EdenEast/nightfox.nvim' },
 }

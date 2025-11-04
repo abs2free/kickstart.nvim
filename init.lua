@@ -683,7 +683,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         gopls = {
-          setting = {
+          settings = {
             gopls = {
               gofumpt = false,
               staticcheck = true,
@@ -693,6 +693,32 @@ require('lazy').setup({
             },
           },
         },
+
+        -- ==== HTML / CSS / TailwindCSS ====================================
+        html = {}, -- 默认设置足够
+        cssls = {}, -- 来自 `vscode-langservers-extracted`
+        tailwindcss = {
+          settings = {
+            tailwindCSS = {
+              experimental = { classRegex = { [[class=("|')(.*?)\1]] } },
+            },
+          },
+        },
+
+        -- ==== TypeScript / JavaScript ====================================
+        ts_ls = {},
+
+        -- ==== PHP =======================================================
+        -- intelephense = { -- 若想用 phpactor 可改成 `phpactor = {}`
+        --   settings = {
+        --     intelephense = {
+        --       maxMemory = 4096,
+        --       diagnostics = { enable = true },
+        --       files = { maxSize = 5000000 },
+        --     },
+        --   },
+        -- },
+
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -701,7 +727,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        ts_ls = {},
+        --       ts_ls = {},
         --
 
         lua_ls = {
@@ -736,9 +762,24 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+
+        -- Go
         'gopls',
         'goimports',
         'golangci-lint',
+
+        -- HTML / CSS / Tailwind / JS / TS
+        'prettierd', -- 支持 HTML、CSS、JS、TS、JSON、Markdown …
+        'eslint_d', -- 快速的 eslint（可选，但强烈推荐）
+
+        -- -- Python
+        -- 'black',
+        -- 'isort',
+
+        -- -- PHP
+        -- 'intelephense', -- 已经在 LSP 列表里，这里重复一次也没事（确保已装）
+        -- -- 如果想用 phpcs/PHPCBF，可加下面两行（需要自行配置 phpcs.ruleset）
+        -- -- "phpcs", "phpcbf",
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -794,10 +835,14 @@ require('lazy').setup({
         go = { 'goimports' },
 
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
+        -- python = { 'isort', 'black' },
+
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+
+        html = { 'prettierd' },
+        css = { 'prettierd' },
+        typescript = { 'prettierd', 'eslint_d' },
       },
     },
   },
@@ -1013,7 +1058,7 @@ require('lazy').setup({
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
