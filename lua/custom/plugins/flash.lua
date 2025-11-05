@@ -38,6 +38,7 @@ return {
       desc = 'Flash Treesitter',
     },
     {
+      -- press y+r
       'r',
       mode = 'o',
       function()
