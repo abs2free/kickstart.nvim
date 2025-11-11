@@ -681,7 +681,16 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        -- C / C++ -------------------------------------------------
+        clangd = {
+          cmd = { 'clangd', '--background-index', '--suggest-missing-includes' },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'hpp', 'h' },
+          root_dir = require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', 'CMakeLists.txt', '.git'),
+          init_options = {
+            clangdFileStatus = true,
+            semanticHighlighting = true,
+          },
+        },
         gopls = {
           settings = {
             gopls = {
@@ -780,6 +789,8 @@ require('lazy').setup({
         -- 'intelephense', -- 已经在 LSP 列表里，这里重复一次也没事（确保已装）
         -- -- 如果想用 phpcs/PHPCBF，可加下面两行（需要自行配置 phpcs.ruleset）
         -- -- "phpcs", "phpcbf",
+        'clangd',
+        'clang-format',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -831,6 +842,8 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+        c = { 'clang_format' },
+        cpp = { 'clang_format' },
         lua = { 'stylua' },
         go = { 'goimports', 'gofmt' },
         -- Conform can also run multiple formatters sequentially
@@ -920,11 +933,11 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
           omni = {
@@ -1026,7 +1039,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' },
+      ensure_installed = { 'bash', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'go' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
