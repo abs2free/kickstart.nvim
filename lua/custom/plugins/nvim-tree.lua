@@ -93,7 +93,7 @@ return {
 
       nvim_tree.setup {
         hijack_directories = {
-          enable = true,
+          enable = false,
         },
         -- update_to_buf_dir = {
         --   enable = false,
