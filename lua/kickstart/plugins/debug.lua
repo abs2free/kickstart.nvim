@@ -95,6 +95,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'codelldb', -- 添加C语言调试器
       },
     }
 
@@ -131,6 +132,57 @@ return {
     --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
     --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
     -- end
+
+    -- 添加C语言调试配置
+    dap.adapters.codelldb = {
+      type = 'server',
+      port = '${port}',
+      executable = {
+        command = vim.fn.stdpath 'data' .. '/mason/packages/codelldb/extension/adapter/codelldb',
+        args = { '--port', '${port}' },
+      },
+    }
+
+    dap.configurations.c = {
+      {
+        name = 'Launch file',
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+          -- 获取当前文件名(不含扩展名)
+          local fileName = vim.fn.expand '%:t:r'
+          -- 获取当前文件所在目录
+          local filePath = vim.fn.expand '%:p:h'
+          -- 组合可执行文件完整路径
+          local exePath = filePath .. '/' .. fileName
+
+          -- Windows系统下需要加.exe后缀
+          if vim.fn.has 'win32' == 1 then
+            exePath = exePath .. '.exe'
+          end
+
+          -- 如果可执行文件不存在，先编译
+          if vim.fn.filereadable(exePath) == 0 then
+            -- 获取源文件完整路径
+            local sourceFile = vim.fn.expand '%:p'
+            -- 编译命令
+            local cmd = string.format('gcc -g %s -o %s', sourceFile, exePath)
+            -- 执行编译
+            vim.fn.system(cmd)
+
+            -- 检查编译是否成功
+            if vim.v.shell_error ~= 0 then
+              print 'Compilation failed!'
+              return nil
+            end
+          end
+
+          return exePath
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+      },
+    }
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
