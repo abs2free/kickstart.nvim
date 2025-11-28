@@ -48,6 +48,19 @@ return {
       end,
     }
 
+    local micro = {
+      'macro',
+      fmt = function()
+        local reg = vim.fn.reg_recording()
+        if reg ~= '' then
+          return 'Recording @' .. reg
+        end
+        return nil
+      end,
+      color = { fg = '#ff9e64' },
+      draw_empty = false,
+    }
+
     local diff = {
       'diff',
       colored = true,
@@ -71,7 +84,7 @@ return {
         section_separators = { left = '|', right = '' },
       },
       sections = {
-        lualine_a = { mode },
+        lualine_a = { mode, micro },
         lualine_b = { branch },
         lualine_c = { diff, filename },
         lualine_x = {
