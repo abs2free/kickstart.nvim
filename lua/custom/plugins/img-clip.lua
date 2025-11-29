@@ -32,9 +32,10 @@ return {
       -- end,
 
       -- Conditional dir_path based on skitty mode
-      dir_path = vim.g.neovim_mode == 'skitty' and 'img' or function()
-        return vim.fn.expand '%:t:r' .. '-img'
-      end,
+      -- dir_path = vim.g.neovim_mode == 'skitty' and 'img' or function()
+      --   return vim.fn.expand '%:t:r' .. '-img'
+      -- end,
+      dir_path = 'assets',
 
       -- If you want to get prompted for the filename when pasting an image
       -- This is the actual name that the physical file will have
