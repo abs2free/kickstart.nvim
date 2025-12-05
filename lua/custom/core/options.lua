@@ -49,3 +49,5 @@ vim.opt.updatetime = 50
 vim.opt.colorcolumn = '80'
 vim.opt.clipboard:append 'unnamedplus'
 vim.opt.mouse = 'a'
+
+vim.opt.fileencodings = 'utf-8,ucs-bom,gb18030,gbk,gb2312,cp936'
