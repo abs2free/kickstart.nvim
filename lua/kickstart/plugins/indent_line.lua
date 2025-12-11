@@ -31,6 +31,7 @@ return {
       require('ibl').setup {
         indent = {
           char = '│',
+          tab_char = '│',
         },
         scope = {
           enabled = true,
@@ -62,6 +63,13 @@ return {
         },
       }
     end,
+
+    -- 使用 <leader>il 来切换 indent line
+    vim.keymap.set('n', '<leader>il', ':IBLToggle<CR>', {
+      noremap = true,
+      silent = true,
+      desc = 'Toggle indent line',
+    }),
   },
   {
     'HiPhish/rainbow-delimiters.nvim', -- 添加 rainbow-delimiters 插件
