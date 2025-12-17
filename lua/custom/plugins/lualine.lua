@@ -76,6 +76,13 @@ return {
 
     local branch = { 'branch', icon = { '', color = { fg = '#A6D4DE' } }, '|' }
 
+    -- 添加自定义组件显示字数
+    local words_count = function()
+      local wc = vim.fn.wordcount()
+      local words = wc.words or 0
+      return words .. ' words'
+    end
+
     lualine.setup {
       icons_enabled = true,
       options = {
@@ -95,9 +102,17 @@ return {
             cond = lazy_status.has_updates,
             color = { fg = '#ff9e64' },
           },
-          -- { "encoding",},
-          -- { "fileformat" },
+          { 'encoding' },
+          { 'fileformat', icons_enabled = false },
           { 'filetype' },
+          { words_count }, -- 添加字数统计
+          {
+            'datetime',
+            -- 自定义时间格式
+            fmt = function()
+              return os.date '%H:%M:%S'
+            end,
+          },
         },
       },
     }
