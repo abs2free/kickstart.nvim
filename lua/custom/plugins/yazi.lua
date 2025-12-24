@@ -41,5 +41,9 @@ return
     --
     -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
     vim.g.loaded_netrwPlugin = 1
+
+    if os.getenv "NVIM" then
+      require("toggle-pane"):entry "min-preview"
+    end
   end,
 }
