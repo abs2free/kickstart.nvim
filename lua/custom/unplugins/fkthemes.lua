@@ -8,9 +8,7 @@ return {
   },
   config = function()
     require('fkthemes').setup {
-      themes = { 'sonokai', 'catppuccin', 'gruvbox', 'tokyonight-night', 'tokyonight-storm', 'tokyonight-moon', 'tokyonight-day' },
-      default_theme = 'gruvbox',
-      transparent_background = true,
+      transparent_background = false,
     }
   end,
 }
