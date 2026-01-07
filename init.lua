@@ -754,6 +754,14 @@ require('lazy').setup({
             },
           },
         },
+
+        -- Swift 配置：标记 native_config 以跳过 Mason 检查
+        sourcekit = {
+          native_config = true,
+          cmd = { 'sourcekit-lsp' },
+          filetypes = { 'swift', 'objc', 'objcpp' },
+          root_markers = { 'Package.swift', '.git' },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -769,7 +777,15 @@ require('lazy').setup({
       --
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
+
+      -- 修复逻辑：过滤掉 native_config，只将 Mason 支持的包加入列表
+      local ensure_installed = {}
+      for name, config in pairs(servers or {}) do
+        if not config.native_config then
+          table.insert(ensure_installed, name)
+        end
+      end
+
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
 
@@ -802,6 +818,10 @@ require('lazy').setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
+            -- 修复点：如果是 native 服务（如 sourcekit），跳过 lspconfig 的 setup 流程
+            if server.native_config then
+              return
+            end
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
@@ -810,6 +830,18 @@ require('lazy').setup({
           end,
         },
       }
+
+      -- 4. 处理 Swift (vim.lsp.config 原生方式)
+      -- 仅在 Neovim 0.11+ 下生效，符合你提到的新规范
+      if servers.sourcekit then
+        vim.lsp.config('sourcekit', {
+          cmd = servers.sourcekit.cmd,
+          filetypes = servers.sourcekit.filetypes,
+          root_markers = servers.sourcekit.root_markers,
+          capabilities = capabilities,
+        })
+        vim.lsp.enable 'sourcekit'
+      end
     end,
   },
 
@@ -857,6 +889,7 @@ require('lazy').setup({
         html = { 'prettierd' },
         css = { 'prettierd' },
         typescript = { 'prettierd', 'eslint_d' },
+        swift = { 'swiftformat' }, -- 记得系统安装 swiftformat
       },
     },
   },
