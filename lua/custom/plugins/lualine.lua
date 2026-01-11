@@ -83,6 +83,27 @@ return {
       return words .. ' words'
     end
 
+    local function xcodebuild_device()
+      if vim.g.xcodebuild_platform == 'macOS' then
+        return ' macOS'
+      end
+
+      local deviceIcon = ''
+      if vim.g.xcodebuild_platform:match 'watch' then
+        deviceIcon = '􀟤'
+      elseif vim.g.xcodebuild_platform:match 'tv' then
+        deviceIcon = '􀡴 '
+      elseif vim.g.xcodebuild_platform:match 'vision' then
+        deviceIcon = '􁎖 '
+      end
+
+      if vim.g.xcodebuild_os then
+        return deviceIcon .. ' ' .. vim.g.xcodebuild_device_name .. ' (' .. vim.g.xcodebuild_os .. ')'
+      end
+
+      return deviceIcon .. ' ' .. vim.g.xcodebuild_device_name
+    end
+
     lualine.setup {
       icons_enabled = true,
       options = {
@@ -95,6 +116,11 @@ return {
         lualine_b = { branch },
         lualine_c = { diff, filename },
         lualine_x = {
+          -- xcode support
+          { "' ' .. vim.g.xcodebuild_last_status", color = { fg = '#57606a' } },
+          { "'󰙨 ' .. vim.g.xcodebuild_test_plan", color = { fg = '#0969DA', bg = '#DDF4FF', gui = 'bold' } },
+          { xcodebuild_device, color = { fg = '#9a6700', bg = '#FFF8C5', gui = 'bold' } },
+
           {
             -- require("noice").api.statusline.mode.get,
             -- cond = require("noice").api.statusline.mode.has,

@@ -7,6 +7,7 @@ return {
       local lint = require 'lint'
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
+        swift = { 'swiftlint' },
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -51,10 +52,16 @@ return {
           -- avoid superfluous noise, notably within the handy LSP pop-ups that
           -- describe the hovered symbol using Markdown.
           if vim.bo.modifiable then
-            lint.try_lint()
+            if not vim.endswith(vim.fn.bufname(), 'swiftinterface') then
+              lint.try_lint()
+            end
           end
         end,
       })
+
+      vim.keymap.set('n', '<leader>ml', function()
+        require('lint').try_lint()
+      end, { desc = 'Lint file' })
     end,
   },
 }
