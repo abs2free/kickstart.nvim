@@ -71,3 +71,10 @@ vim.keymap.set('n', '<leader>xq', '<cmd>Telescope quickfix<cr>', { desc = 'Show 
 
 vim.keymap.set('n', '<leader>xx', '<cmd>XcodebuildQuickfixLine<cr>', { desc = 'Quickfix Line' })
 vim.keymap.set('n', '<leader>xa', '<cmd>XcodebuildCodeActions<cr>', { desc = 'Show Code Actions' })
+
+-- 使用 H 和 L 快速切换左右 Buffer
+vim.keymap.set('n', 'H', ':bprevious<cr>', { desc = 'Prev Buffer' })
+vim.keymap.set('n', 'L', ':bnext<cr>', { desc = 'Next Buffer' })
+-- 关闭当前 Buffer
+-- 如果安装了 bufdelete 插件
+vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer (Keep Layout)' })
