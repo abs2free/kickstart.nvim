@@ -23,6 +23,7 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'wojciech-kulik/xcodebuild.nvim',
   },
   keys = {
     -- Basic debugging keymaps, feel free to change to your liking!
@@ -99,6 +100,24 @@ return {
       },
     }
 
+    local xcodebuild = require 'xcodebuild.integrations.dap'
+    xcodebuild.setup()
+
+    -- 修复：使用 Autocmd 仅在 Swift 文件中覆盖按键
+    -- 避免全局覆盖 <leader>b，导致调试其他语言时报错
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'swift',
+      callback = function()
+        vim.keymap.set('n', '<leader>b', xcodebuild.toggle_breakpoint, { buffer = true, desc = 'Xcode: Toggle Breakpoint' })
+        vim.keymap.set('n', '<leader>B', xcodebuild.toggle_message_breakpoint, { desc = 'Toggle Message Breakpoint' })
+        vim.keymap.set('n', '<leader>dd', xcodebuild.build_and_debug, { buffer = true, desc = 'Xcode: Build & Debug' })
+        vim.keymap.set('n', '<leader>dx', xcodebuild.terminate_session, { buffer = true, desc = 'Xcode: Terminate' })
+        vim.keymap.set('n', '<leader>dr', xcodebuild.debug_without_build, { desc = 'Debug Without Building' })
+        vim.keymap.set('n', '<leader>dt', xcodebuild.debug_tests, { desc = 'Debug Tests' })
+        vim.keymap.set('n', '<leader>dT', xcodebuild.debug_class_tests, { desc = 'Debug Class Tests' })
+      end,
+    })
+
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
@@ -106,32 +125,19 @@ return {
       --    Feel free to remove or use ones that you like more! :)
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-      controls = {
-        icons = {
-          pause = '⏸',
-          play = '▶',
-          step_into = '⏎',
-          step_over = '⏭',
-          step_out = '⏮',
-          step_back = 'b',
-          run_last = '▶▶',
-          terminate = '⏹',
-          disconnect = '⏏',
-        },
-      },
     }
 
     -- Change breakpoint icons
-    -- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
-    -- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
-    -- local breakpoint_icons = vim.g.have_nerd_font
-    --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
-    --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
-    -- for type, icon in pairs(breakpoint_icons) do
-    --   local tp = 'Dap' .. type
-    --   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
-    --   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
-    -- end
+    vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+    vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+    local breakpoint_icons = vim.g.have_nerd_font
+        and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+      or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+    for type, icon in pairs(breakpoint_icons) do
+      local tp = 'Dap' .. type
+      local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+      vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+    end
 
     -- 添加C语言调试配置
     dap.adapters.codelldb = {
@@ -188,11 +194,55 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    -- Install golang specific config
+    -- 添加 Go 调试配置
+    dap.configurations.go = {
+      {
+        type = 'go',
+        name = 'Debug Package',
+        request = 'launch',
+        program = '${fileDirname}',
+      },
+      {
+        type = 'go',
+        name = 'Debug Test',
+        request = 'launch',
+        mode = 'test',
+        program = '${fileDirname}',
+      },
+      {
+        type = 'go',
+        name = 'Debug Test (go.mod)',
+        request = 'launch',
+        mode = 'test',
+        program = './${relativeFileDirname}',
+      },
+    }
+
+    -- 配置 Go 调试适配器
+    dap.adapters.go = {
+      type = 'executable',
+      command = 'dlv',
+      args = { 'dap', '-l', '127.0.0.1:${port}' },
+    }
+
+    -- 修改 dap-go 的设置
     require('dap-go').setup {
+      -- 调试器配置
+      dap_configurations = {
+        {
+          type = 'go',
+          name = 'Debug Package',
+          request = 'launch',
+          program = '${fileDirname}',
+        },
+      },
+      -- delve配置
       delve = {
-        -- On Windows delve must be run attached or it crashes.
-        -- See https://github.com/leoluz/nvim-dap-go/blob/main/README.md#configuring
+        initialize_timeout_sec = 20,
+        port = '${port}',
+        args = {},
+        build_flags = '',
+        -- Windows系统需要设置为false
         detached = vim.fn.has 'win32' == 0,
       },
     }
