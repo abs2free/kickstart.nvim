@@ -78,3 +78,8 @@ vim.keymap.set('n', 'L', ':bnext<cr>', { desc = 'Next Buffer' })
 -- 关闭当前 Buffer
 -- 如果安装了 bufdelete 插件
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Delete Buffer (Keep Layout)' })
+
+vim.keymap.set('n', '<Tab>', ':bnext<CR>')
+vim.keymap.set('n', '<S-Tab>', ':bprev<CR>')
+
+vim.opt.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
