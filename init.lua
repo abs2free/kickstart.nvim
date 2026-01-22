@@ -437,7 +437,7 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>s?', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
@@ -810,6 +810,7 @@ require('lazy').setup({
         'clang-format',
         'codelldb',
         'swiftlint',
+        'rust-analyzer',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed, auto_update = true, run_on_start = true }
 
@@ -861,7 +862,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = true,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -871,7 +872,7 @@ require('lazy').setup({
           return nil
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 2000,
             lsp_format = 'fallback',
           }
         end
@@ -890,7 +891,7 @@ require('lazy').setup({
         html = { 'prettierd' },
         css = { 'prettierd' },
         typescript = { 'prettierd', 'eslint_d' },
-        swift = { 'swiftformat' }, -- 记得系统安装 swiftformat
+        swift = { 'swiftformat', 'swift_format', stop_after_first = true },
       },
     },
   },
@@ -920,6 +921,10 @@ require('lazy').setup({
           {
             'rafamadriz/friendly-snippets',
             config = function()
+              -- 使用 snipmate 加载器，它会自动寻找路径下以 .snippets 结尾的文件
+              require('luasnip.loaders.from_vscode').lazy_load {
+                paths = { vim.fn.stdpath 'config' .. '/snippets' },
+              }
               require('luasnip.loaders.from_vscode').lazy_load()
             end,
           },
@@ -964,12 +969,25 @@ require('lazy').setup({
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
         nerd_font_variant = 'mono',
+        use_nvim_cmp_as_default = true,
       },
 
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
         documentation = { auto_show = true, auto_show_delay_ms = 500 },
+        keyword = {
+          -- 默认是 'prefix'，改为 'fuzzy' 可以让你在输入时更自由地跳过字符
+          range = 'full',
+        },
+        menu = {
+          draw = {
+            columns = {
+              { 'label', 'label_description', gap = 1 },
+              { 'kind_icon', 'kind' },
+            },
+          },
+        },
       },
 
       sources = {
@@ -1000,7 +1018,17 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = {
+        implementation = 'prefer_rust_with_warning',
+        prebuilt_binaries = {
+          download = true, -- 自动下载预编译的二进制文件
+        },
+        frecency = { enabled = true },
+        proximity = { enabled = true },
+
+        use_typo_resistance = true, -- 允许微小的拼写错误
+        sorts = { 'score', 'sort_text' },
+      },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },

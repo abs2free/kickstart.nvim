@@ -1,0 +1,181 @@
+{
+  "import SwiftUI": {
+    "prefix": "iswiftui",
+    "body": ["import SwiftUI", ""],
+    "description": "Import SwiftUI"
+  },
+  "SwiftUI View Structure": {
+    "prefix": "sview",
+    "body": [
+      "struct ${1:MyView}: View {",
+      "    var body: some View {",
+      "        ${0:VStack {",
+      "            Text(\"Hello, World!\")",
+      "        \\}}",
+      "    }",
+      "}",
+      "",
+      "#Preview {",
+      "    ${1:MyView}()",
+      "}"
+    ],
+    "description": "Standard SwiftUI View"
+  },
+  "SwiftUI List with ForEach": {
+    "prefix": "list",
+    "body": [
+      "List(${1:items}) { ${2:item} in",
+      "    ${0:Text(${2:item}.name)}",
+      "}"
+    ],
+    "description": "SwiftUI List with items"
+  },
+  "NavigationStack Container": {
+    "prefix": "navstack",
+    "body": [
+      "NavigationStack {",
+      "    ${1:ScrollView} {",
+      "        ${0}",
+      "    }",
+      "    .navigationTitle(\"${2:Title}\")",
+      "    .navigationBarTitleDisplayMode(.${3:inline})",
+      "}"
+    ]
+  },
+  "VStack/HStack/ZStack": {
+    "prefix": "stack",
+    "body": [
+      "${1|VStack,HStack,ZStack|}(alignment: .${2:center}, spacing: ${3:10}) {",
+      "    ${0}",
+      "}"
+    ]
+  },
+  "@State Property": {
+    "prefix": "state",
+    "body": ["@State private var ${1:name}: ${2:String} = ${3:\"\"}"],
+    "description": "SwiftUI State property"
+  },
+  "@Binding Property": {
+    "prefix": "bind",
+    "body": ["@Binding var ${1:name}: ${2:String}"],
+    "description": "SwiftUI Binding property"
+  },
+  "@Environment Property": {
+    "prefix": "env",
+    "body": ["@Environment(\\.${1:dismiss}) var ${1:dismiss}"],
+    "description": "SwiftUI Environment property"
+  },
+  "@Observable Model (Swift 6)": {
+    "prefix": "obmodel",
+    "body": [
+      "@Observable",
+      "final class ${1:ViewModel} {",
+      "    var ${2:items}: [${3:String}] = []",
+      "    ",
+      "    init() {",
+      "        $0",
+      "    }",
+      "}"
+    ]
+  },
+  "Button with Label": {
+    "prefix": "btn",
+    "body": [
+      "Button {",
+      "    ${1:// Action}",
+      "} label: {",
+      "    ${2:Text(\"Button\")}",
+      "}"
+    ]
+  },
+  "Label with System Image": {
+    "prefix": "label",
+    "body": ["Label(\"${1:Text}\", systemImage: \"${2:star}\")"]
+  },
+  "SwiftUI Toolbar": {
+    "prefix": "toolbar",
+    "body": [
+      ".toolbar {",
+      "    ToolbarItem(placement: .${1:navigationBarTrailing}) {",
+      "        Button(\"${2:Add}\") {",
+      "            ${0}",
+      "        }",
+      "    }",
+      "}"
+    ]
+  },
+  "Async Task": {
+    "prefix": "task",
+    "body": [
+      "Task {",
+      "    ${0}",
+      "}"
+    ]
+  },
+  "Guard Let Self": {
+    "prefix": "gself",
+    "body": ["guard let self = self else { return }"],
+    "description": "Unwrap self safely in closures"
+  },
+  "Guard Let Optional": {
+    "prefix": "glet",
+    "body": [
+      "guard let ${1:name} = ${2:optional} else {",
+      "    ${3:return}",
+      "}",
+      "${0}"
+    ]
+  },
+  "If Let Optional": {
+    "prefix": "iflet",
+    "body": [
+      "if let ${1:name} = ${2:optional} {",
+      "    ${0}",
+      "}"
+    ]
+  },
+  "DispatchQueue Main Async": {
+    "prefix": "mainas",
+    "body": [
+      "DispatchQueue.main.async {",
+      "    ${0}",
+      "}"
+    ]
+  },
+  "Property Observer didSet": {
+    "prefix": "didset",
+    "body": [
+      "var ${1:name}: ${2:Type} = ${3:initialValue} {",
+      "    didSet {",
+      "        ${0}",
+      "    }",
+      "}"
+    ]
+  },
+  "MARK Header": {
+    "prefix": "mark",
+    "body": ["// MARK: - ${1:Section Name}"],
+    "description": "Code organization marker"
+  },
+  "Singleton Pattern": {
+    "prefix": "shared",
+    "body": [
+      "static let shared = ${1:ClassName}()",
+      "",
+      "private init() {}"
+    ]
+  },
+  "XCTest Case": {
+    "prefix": "testf",
+    "body": [
+      "func test_${1:feature}_when${2:Condition}_should${3:Result}() throws {",
+      "    // Given",
+      "    $0",
+      "    ",
+      "    // When",
+      "    ",
+      "    // Then",
+      "}"
+    ]
+  }
+}
