@@ -83,3 +83,6 @@ vim.keymap.set('n', '<Tab>', ':bnext<CR>')
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>')
 
 vim.opt.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+
+vim.keymap.set('n', '<A-S-l>', '<cmd>BufferLineMoveNext<cr>', { desc = '将当前标签向右移' })
+vim.keymap.set('n', '<A-S-h>', '<cmd>BufferLineMovePrev<cr>', { desc = '将当前标签向左移' })
