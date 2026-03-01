@@ -86,3 +86,8 @@ vim.opt.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpo
 
 vim.keymap.set('n', '<A-S-l>', '<cmd>BufferLineMoveNext<cr>', { desc = '将当前标签向右移' })
 vim.keymap.set('n', '<A-S-h>', '<cmd>BufferLineMovePrev<cr>', { desc = '将当前标签向左移' })
+
+-- Normal 模式：Ctrl + / 切换注释 (终端中 <C-/> 通常发送的是 <C-_>)
+vim.keymap.set('n', '<C-_>', 'gcc', { remap = true })
+-- Visual 模式：Ctrl + / 切换注释
+vim.keymap.set('v', '<C-_>', 'gc', { remap = true })

@@ -20,7 +20,7 @@ return {
         api_key_name = '',
         -- 注意：即便这里写了 endpoint，parse_curl_args 内部有时也无法通过 opts 访问到它
         endpoint = 'http://127.0.0.1:11434/v1',
-        model = 'qwen2.5-coder:32b',
+        model = 'gpt-oss:120b-cloud',
         disable_tools = true,
       },
 
