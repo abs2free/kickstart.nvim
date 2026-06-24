@@ -502,6 +502,7 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
+      'b0o/SchemaStore.nvim', -- <-- 添加这个插件，用于自动下载和解析 YAML schemas
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -762,6 +763,24 @@ require('lazy').setup({
           filetypes = { 'swift', 'objc', 'objcpp' },
           root_markers = { 'Package.swift', '.git' },
         },
+
+        -- 新增 YAML LSP 配置 ====
+        yamlls = {
+          -- 告诉 Mason 自动下载并管理 yaml-language-server
+          settings = {
+            yaml = {
+              schemaStore = {
+                -- 禁用内建的 schemaStore，改用 SchemaStore.nvim 插件动态管理
+                enable = false,
+                url = '',
+              },
+              -- 联动插件，动态加载各种社区维护的规范（K8s, GitHub Actions, docker-compose 等）
+              schemas = require('schemastore').yaml.schemas(),
+              validate = true,
+              completion = true,
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -810,7 +829,7 @@ require('lazy').setup({
         'clang-format',
         'codelldb',
         'swiftlint',
-        'rust-analyzer',
+        -- 'rust-analyzer',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed, auto_update = true, run_on_start = true }
 

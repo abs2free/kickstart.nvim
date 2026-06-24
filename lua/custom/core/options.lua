@@ -5,6 +5,7 @@
 
 -- 为 'markdown' 文件类型设置 conceallevel = 2
 vim.opt_local.conceallevel = 2
+vim.opt.termguicolors = true
 
 vim.api.nvim_create_autocmd('FileType', {
   -- 匹配文件类型
