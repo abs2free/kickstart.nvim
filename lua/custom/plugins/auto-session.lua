@@ -16,16 +16,16 @@ return {
   ---@type AutoSession.Config
   opts = {
     -- 1. 设置你要求的保存路径
-    auto_session_root_dir = vim.fn.expand '~/.vim/sessions/',
+    root_dir = vim.fn.expand '~/.vim/sessions/',
 
     -- 2. 核心行为配置
-    auto_save_enabled = true,
-    auto_restore_enabled = true,
-    auto_session_enable_last_session = false, -- 设为 false，只有进入目录才恢复
+    auto_save = true,
+    auto_restore = true,
+    auto_restore_last_session = false, -- 设为 false，只有进入目录才恢复
     log_level = 'error',
 
     -- 3. 控制不触发自动保存的目录
-    auto_session_suppress_dirs = { '~/Desktop', '~/Downloads' },
+    suppress_dirs = { '~/Desktop', '~/Downloads' },
 
     auto_clean_after_session_restore = true,
 

@@ -756,13 +756,13 @@ require('lazy').setup({
           },
         },
 
-        -- Swift 配置：标记 native_config 以跳过 Mason 检查
-        sourcekit = {
-          native_config = true,
-          cmd = { 'sourcekit-lsp' },
-          filetypes = { 'swift', 'objc', 'objcpp' },
-          root_markers = { 'Package.swift', '.git' },
-        },
+        -- -- Swift 配置：标记 native_config 以跳过 Mason 检查
+        -- sourcekit = {
+        --   native_config = true,
+        --   cmd = { 'sourcekit-lsp' },
+        --   filetypes = { 'swift', 'objc', 'objcpp' },
+        --   root_markers = { 'Package.swift', '.git' },
+        -- },
 
         -- 新增 YAML LSP 配置 ====
         yamlls = {
