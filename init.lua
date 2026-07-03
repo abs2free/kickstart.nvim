@@ -809,7 +809,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
 
         -- Go
-        'gopls',
+        -- 'gopls',
         'goimports',
         'golangci-lint',
 
@@ -843,6 +843,10 @@ require('lazy').setup({
             if server.native_config then
               return
             end
+
+            if server_name == 'gopls' then
+              return
+            end
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
@@ -854,15 +858,15 @@ require('lazy').setup({
 
       -- 4. 处理 Swift (vim.lsp.config 原生方式)
       -- 仅在 Neovim 0.11+ 下生效，符合你提到的新规范
-      if servers.sourcekit then
-        vim.lsp.config('sourcekit', {
-          cmd = servers.sourcekit.cmd,
-          filetypes = servers.sourcekit.filetypes,
-          root_markers = servers.sourcekit.root_markers,
-          capabilities = capabilities,
-        })
-        vim.lsp.enable 'sourcekit'
-      end
+      --   if servers.sourcekit then
+      --     vim.lsp.config('sourcekit', {
+      --       cmd = servers.sourcekit.cmd,
+      --       filetypes = servers.sourcekit.filetypes,
+      --       root_markers = servers.sourcekit.root_markers,
+      --       capabilities = capabilities,
+      --     })
+      --     vim.lsp.enable 'sourcekit'
+      --   end
     end,
   },
 
