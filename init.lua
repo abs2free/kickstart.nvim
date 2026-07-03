@@ -809,7 +809,8 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
 
         -- Go
-        -- 'gopls',
+        { 'gopls', version = 'v0.21.1', auto_update = false },
+        -- '',
         'goimports',
         'golangci-lint',
 
@@ -831,7 +832,7 @@ require('lazy').setup({
         'swiftlint',
         -- 'rust-analyzer',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed, auto_update = true, run_on_start = true }
+      require('mason-tool-installer').setup { ensure_installed = ensure_installed, auto_update = false, run_on_start = true }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
@@ -844,9 +845,6 @@ require('lazy').setup({
               return
             end
 
-            if server_name == 'gopls' then
-              return
-            end
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
