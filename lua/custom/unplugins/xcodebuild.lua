@@ -7,7 +7,19 @@ return {
     -- You must select at least one:
     'nvim-telescope/telescope.nvim',
     -- "ibhagwan/fzf-lua",
-    'folke/snacks.nvim', -- (optional) to show previews
+	
+    -- (optional) to show previews
+	-- 必须安装 snacks.nvim 以支持图片渲染
+    {
+      'folke/snacks.nvim',
+      opts = {
+        image = {
+          enabled = true, -- 开启图片支持
+          -- 可以在这里配置图片渲染后端，通常默认即可
+          -- backend = "ghostty",
+        },
+      },
+    },
 
     'MunifTanjim/nui.nvim',
     'nvim-tree/nvim-tree.lua', -- (optional) to manage project files
