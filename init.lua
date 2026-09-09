@@ -685,14 +685,20 @@ require('lazy').setup({
       local servers = {
         -- C / C++ -------------------------------------------------
         clangd = {
-          cmd = { 'clangd', '--background-index', '--suggest-missing-includes' },
-          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'hpp', 'h' },
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy', -- 建议开启代码静态检查
+            '--completion-style=detailed', -- 提供更详细的补全提示
+            '--header-insertion=iwyu', -- 自动引入缺失的头文件
+          },
+          -- 建议移除 filetypes，使用 lspconfig 的默认映射（自动支持 .c/.cpp/.h 等）
           root_dir = require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', 'CMakeLists.txt', '.git'),
           init_options = {
             clangdFileStatus = true,
-            semanticHighlighting = true,
           },
         },
+
         gopls = {
           settings = {
             gopls = {
@@ -826,7 +832,6 @@ require('lazy').setup({
         -- 'intelephense', -- 已经在 LSP 列表里，这里重复一次也没事（确保已装）
         -- -- 如果想用 phpcs/PHPCBF，可加下面两行（需要自行配置 phpcs.ruleset）
         -- -- "phpcs", "phpcbf",
-        'clangd',
         'clang-format',
         'codelldb',
         'swiftlint',
